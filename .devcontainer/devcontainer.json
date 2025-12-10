@@ -1,0 +1,17 @@
+  {
+    "image": "mcr.microsoft.com/devcontainers/go",
+    "runArgs": [
+      "--platform=linux/amd64"
+    ],
+    "customizations": {
+      "vscode": {
+        "settings": {},
+        "extensions": [
+          "golang.go",
+          "DavidAnson.vscode-markdownlint"
+        ]
+      }
+    },
+    "postCreateCommand": "/bin/bash .devcontainer/post-create.sh"
+  }
+}

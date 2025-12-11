@@ -39,7 +39,7 @@ Create a JSON configuration file in the Cloud Workstation Tool configuration fol
 
 To start the tunnel to the Google Cloud Workstation, run:
 
-> It is recommended to rename `cw-tunnel-windows-amd64` to `cw-tunnel` in Windows.
+> It is recommended to rename the binary to `cw-tunnel`.
 
 ```shell
 $ cw-tunnel
@@ -59,7 +59,7 @@ Starting tunnel to WORKSTATION_NAME:22 on localhost:LOCAL_PORT...
 
 ## TODO
 
-* [] Add command to create configuratio folder and empty config file
+* [] Add command to create configuration folder and empty config file
 * [] Add `start` command
 * [] Add `stop` command
 * [] Unify `start`, `stop` and `tunnel` under a single `cw` tool (`cw start`, `cw stop`, `cw tunnel`)

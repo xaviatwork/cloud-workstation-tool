@@ -35,6 +35,28 @@ Create a JSON configuration file in the Cloud Workstation Tool configuration fol
 * CLUSTER_CONFIG: Name of the Cloud Workstation configuration used by the Cloud Workstation
 * LOCAL_PORT: Local port to connect to the SSH tunnel
 
+## Run
+
+To start the tunnel to the Google Cloud Workstation, run:
+
+> It is recommended to rename `cw-tunnel-windows-amd64` to `cw-tunnel` in Windows.
+
+```shell
+$ cw-tunnel
+
+Configuration:
+- Workstation: WORKSTATION_NAME
+- Project: GOOGLE_CLOUD_PROJECT_ID
+- LocalPort: LOCAL_PORT
+- Cluster: CLOUD_WORKSTATION_CLUSTER_NAME
+- Config: CLUSTER_CONFIG
+- Region: REGION
+Starting tunnel to WORKSTATION_NAME:22 on localhost:LOCAL_PORT...
+[gcloud] Listening on port [LOCAL_PORT].
+✅ Tunnel is ready! You can now connect to localhost:LOCAL_PORT
+
+```
+
 ## TODO
 
 * [] Add command to create configuratio folder and empty config file

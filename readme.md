@@ -15,7 +15,7 @@ Cloud Workstation Tool is a single binary; no need to install ¯\\\_(ツ)_/¯
 
 ### Create the configuration file
 
-Create a JSON configuration file in the Cloud Workstation Tool configuration folder with the following structure:
+Create a JSON configuration file `cw.cfg` in the Cloud Workstation Tool configuration folder with the following structure:
 
 ```json
 {

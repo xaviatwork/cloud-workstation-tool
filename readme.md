@@ -57,6 +57,13 @@ Starting tunnel to WORKSTATION_NAME:22 on localhost:LOCAL_PORT...
 
 ```
 
+## Connect to the Cloud Workstation
+
+To connect your local IDE to the Cloud Workstation, please check the official documentation:
+
+* [Develop code using a local VS Code editor](https://docs.cloud.google.com/workstations/docs/develop-code-using-local-vscode-editor)
+* [Develop code using local JetBrains IDEs](https://docs.cloud.google.com/workstations/docs/develop-code-using-local-jetbrains-ides)
+
 ## TODO
 
 * [] Add command to create configuration folder and empty config file

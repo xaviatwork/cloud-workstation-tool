@@ -20,6 +20,13 @@ func useDefault() *Config {
 	}
 }
 
+func NewCloudWorkstation() *CloudWorkstation {
+	return &CloudWorkstation{
+		TunnelPorts: TunnelPorts{
+			Remote: "22",
+		}}
+}
+
 func Load(cfg *Config) (*CloudWorkstation, error) {
 	if cfg == nil {
 		cfg = useDefault()
@@ -28,7 +35,7 @@ func Load(cfg *Config) (*CloudWorkstation, error) {
 	if err != nil {
 		return &CloudWorkstation{}, err
 	}
-	cw := &CloudWorkstation{}
+	cw := NewCloudWorkstation()
 	if err := json.Unmarshal(cfgBytes, cw); err != nil {
 		return &CloudWorkstation{}, err
 	}

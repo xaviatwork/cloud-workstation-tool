@@ -52,7 +52,63 @@ func start(args []string) error {
 	case workstationspb.Workstation_STATE_RUNNING:
 		fmt.Println("Worstation is already running")
 	default:
-		fmt.Println("not stopped or running")
+		// opReq := &longrunningpb.GetOperationRequest{
+		// 	Name: cw.FullResourceName(),
+		// }
+		// op, err := c.GetOperation(ctx, opReq)
+		// if err != nil {
+		// 	return err
+		// }
+		// for {
+		// 	fmt.Printf("operation: %s\n", op.Name)
+		// 	if op.Done {
+		// 		fmt.Println("operation completed!")
+		// 		break
+		// 	}
+		// 	time.Sleep(5 * time.Second)
+		// }
+		fmt.Printf("Workstation is %s\nPlease Wait.\n", w.State.String())
+	}
+	return nil
+}
+
+func stop(args []string) error {
+	fs := flag.NewFlagSet("stop", flag.ExitOnError)
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+
+	// Load configuration from ~/cloud-worstation/cw.cfg
+	cw, err := cloudworkstation.Load(nil)
+	if err != nil {
+		return err
+	}
+
+	// Prepare Workstation Client
+	ctx := context.Background()
+	c, err := workstations.NewClient(ctx)
+	if err != nil {
+		return err
+	}
+	// Prepare request
+	getReq := &workstationspb.GetWorkstationRequest{
+		Name: cw.FullResourceName(),
+	}
+	// Execute request
+	w, err := c.GetWorkstation(ctx, getReq)
+	if err != nil {
+		return err
+	}
+
+	// Do something with the response
+	switch w.State {
+	case workstationspb.Workstation_STATE_RUNNING:
+		cw.ShowConfig()
+		cw.Stop(c)
+	case workstationspb.Workstation_STATE_STOPPED:
+		fmt.Println("Worstation is already stopped")
+	default:
+		fmt.Printf("Workstation is %s\nPlease Wait.\n", w.State.String())
 	}
 	return nil
 }
@@ -66,6 +122,10 @@ func run(args []string) error {
 	case "start":
 		if err := start(cmdArgs); err != nil {
 			log.Fatalf("command start failed: %s\n", err)
+		}
+	case "stop":
+		if err := stop(cmdArgs); err != nil {
+			log.Fatalf("command stop failed: %s\n", err)
 		}
 	default:
 		log.Printf("unknown command: %s\n", args[1])

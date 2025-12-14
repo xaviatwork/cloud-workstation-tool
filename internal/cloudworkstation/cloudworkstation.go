@@ -7,7 +7,6 @@ import (
 
 	workstations "cloud.google.com/go/workstations/apiv1"
 	workstationspb "cloud.google.com/go/workstations/apiv1/workstationspb"
-	"github.com/yarlson/pin"
 )
 
 type CloudWorkstation struct {
@@ -46,16 +45,8 @@ func (cw *CloudWorkstation) Start(c *workstations.Client) error {
 		return err
 	}
 
-	s := pin.New("Loading ...",
-		pin.WithSpinnerColor(pin.ColorCyan),
-		pin.WithTextColor(pin.ColorYellow),
-		pin.WithDoneSymbol('✔'),
-		pin.WithDoneSymbolColor(pin.ColorGreen),
-		pin.WithPrefix(fmt.Sprintf("Workstation '%s'", cw.Name)),
-		pin.WithSeparatorColor(pin.ColorGray),
-		pin.WithPosition(pin.PositionRight),
-	)
-	cancel := s.Start(context.Background())
+	spin := NewSpinner(fmt.Sprintf("Workstation '%s'", cw.Name))
+	cancel := spin.Start(context.Background())
 	defer cancel()
 
 	for {
@@ -64,11 +55,39 @@ func (cw *CloudWorkstation) Start(c *workstations.Client) error {
 			return err
 		}
 		if op.Done() {
-			s.Stop("Running!")
-			// fmt.Printf("Workstation state: %s\n", w.State.String())
+			spin.Stop("Started!")
 			break
 		}
-		s.UpdateMessage("Starting ...")
+		spin.UpdateMessage("Starting ...")
+		time.Sleep(5 * time.Second)
+	}
+	return nil
+}
+
+func (cw *CloudWorkstation) Stop(c *workstations.Client) error {
+	ctx := context.Background()
+	req := &workstationspb.StopWorkstationRequest{
+		Name: cw.FullResourceName(),
+	}
+	op, err := c.StopWorkstation(ctx, req)
+	if err != nil {
+		return err
+	}
+
+	spin := NewSpinner(fmt.Sprintf("Workstation '%s'", cw.Name))
+	cancel := spin.Start(context.Background())
+	defer cancel()
+
+	for {
+		_, err := op.Poll(ctx)
+		if err != nil {
+			return err
+		}
+		if op.Done() {
+			spin.Stop("Stopped!")
+			break
+		}
+		spin.UpdateMessage("Stopping ...")
 		time.Sleep(5 * time.Second)
 	}
 	return nil

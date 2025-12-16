@@ -6,30 +6,38 @@ APP_NAME := cw
 BUILD_DIR := release
 # The main package path relative to the root (e.g., ".")
 MAIN_PACKAGE := *.go
-# Target OS and Architecture for Apple Silicon
-TARGET_MAC_OS := darwin
-TARGET_MAC_ARCH := arm64
-# Target OS and Architecture for Intel Windows
+# Target OS
+TARGET_OS_MAC := darwin
 TARGET_OS_WIN := windows
-TARGET_ARCH_WIN := amd64
-# The final name of the output file
-OUTPUT_NAME := $(APP_NAME)-$(TARGET_OS_WIN)-$(TARGET_ARCH_WIN)
+TARGET_OS_LINUX := linux
+# Target architectures
+TARGET_ARCH_ARM64 := arm64
+TARGET_ARCH_AMD64 := amd64
 
 # --- Targets ---
-.PHONY: all build clean
+.PHONY: all mac windows linux
 
-# Default target: builds the macOS ARM binary
-all: mac
+all: mac windows linux
 
-# 1. Build Target
 mac:
-	@echo "--- Compiling $(APP_NAME) for $(TARGET_MAC_OS)/$(TARGET_MAC_ARCH) ---"
+	@echo "--- Compiling $(APP_NAME) for $(TARGET_OS_MAC)/$(TARGET_ARCH_ARM64) ---"
 	@# Execute the cross-compilation command
-	GOOS=$(TARGET_MAC_OS) GOARCH=$(TARGET_MAC_ARCH) go build -o $(BUILD_DIR)/$(APP_NAME) $(MAIN_PACKAGE)
-	@echo "--> Built: $(BUILD_DIR)/$(APP_NAME)"
+	GOOS=$(TARGET_OS_MAC) GOARCH=$(TARGET_ARCH_ARM64) go build -o $(BUILD_DIR)/$(APP_NAME)-$(TARGET_OS_MAC)-$(TARGET_ARCH_ARM64) $(MAIN_PACKAGE)
+	@echo "--> Built: $(BUILD_DIR)/$(APP_NAME)-$(TARGET_OS_MAC)-$(TARGET_ARCH_ARM64)"
+
+	@echo "--- Compiling $(APP_NAME) for $(TARGET_OS_MAC)/$(TARGET_ARCH_AMD64) ---"
+	@# Execute the cross-compilation command
+	GOOS=$(TARGET_MAC_OS) GOARCH=$(TARGET_ARCH_AMD64) go build -o $(BUILD_DIR)/$(APP_NAME)-$(TARGET_OS_MAC)-$(TARGET_ARCH_AMD64) $(MAIN_PACKAGE)
+	@echo "--> Built: $(BUILD_DIR)/$(APP_NAME)-$(TARGET_OS_MAC)-$(TARGET_ARCH_AMD64)"
 
 windows:
-	@echo "--- Compiling $(APP_NAME) for $(TARGET_OS_WIN)/$(TARGET_ARCH_WIN) ---"
+	@echo "--- Compiling $(APP_NAME) for $(TARGET_OS_WIN)/$(TARGET_ARCH_AMD64) ---"
 	@# Execute the cross-compilation command
-	GOOS=$(TARGET_OS_WIN) GOARCH=$(TARGET_ARCH_WIN) go build -o $(BUILD_DIR)/$(OUTPUT_NAME) $(MAIN_PACKAGE)
-	@echo "   -> Built: $(BUILD_DIR)/$(OUTPUT_NAME)"
+	GOOS=$(TARGET_OS_WIN) GOARCH=$(TARGET_ARCH_AMD64) go build -o $(BUILD_DIR)/$(APP_NAME)-$(TARGET_OS_WIN)-$(TARGET_ARCH_AMD64) $(MAIN_PACKAGE)
+	@echo "   -> Built: $(BUILD_DIR)/$(APP_NAME)-$(TARGET_OS_WIN)-$(TARGET_ARCH_AMD64)"
+
+linux:
+	@echo "--- Compiling $(APP_NAME) for $(TARGET_OS_LINUX)/$(TARGET_ARCH_AMD64) ---"
+	@# Execute the cross-compilation command
+	GOOS=$(TARGET_OS_LINUX) GOARCH=$(TARGET_ARCH_AMD64) go build -o $(BUILD_DIR)/$(APP_NAME)-$(TARGET_OS_WIN)-$(TARGET_ARCH_AMD64) $(MAIN_PACKAGE)
+	@echo "   -> Built: $(BUILD_DIR)/$(APP_NAME)-$(TARGET_OS_WIN)-$(TARGET_ARCH_AMD64)"

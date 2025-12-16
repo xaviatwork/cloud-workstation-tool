@@ -39,5 +39,5 @@ windows:
 linux:
 	@echo "--- Compiling $(APP_NAME) for $(TARGET_OS_LINUX)/$(TARGET_ARCH_AMD64) ---"
 	@# Execute the cross-compilation command
-	GOOS=$(TARGET_OS_LINUX) GOARCH=$(TARGET_ARCH_AMD64) go build -o $(BUILD_DIR)/$(APP_NAME)-$(TARGET_OS_WIN)-$(TARGET_ARCH_AMD64) $(MAIN_PACKAGE)
-	@echo "   -> Built: $(BUILD_DIR)/$(APP_NAME)-$(TARGET_OS_WIN)-$(TARGET_ARCH_AMD64)"
+	GOOS=$(TARGET_OS_LINUX) GOARCH=$(TARGET_ARCH_AMD64) go build -o $(BUILD_DIR)/$(APP_NAME)-$(TARGET_OS_LINUX)-$(TARGET_ARCH_AMD64) $(MAIN_PACKAGE)
+	@echo "   -> Built: $(BUILD_DIR)/$(APP_NAME)-$(TARGET_OS_LINUX)-$(TARGET_ARCH_AMD64)"

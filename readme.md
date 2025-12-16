@@ -10,7 +10,7 @@ Cloud Workstation Tool is a single binary; no need to install ¯\\\_(ツ)_/¯
 
 ### Create the configuration folder
 
-* MacOS: `mkdir -p ~/.config/cloud-workstation`
+* MacOS/Linux: `mkdir -p ~/.config/cloud-workstation`
 * Windows: `mkdir %USERPROFILE%\cloud-workstation`
 
 ### Create the configuration file
@@ -56,9 +56,17 @@ The tunnel remains open until `cw` is terminated (using `Ctrl+C`).
 
 `cw` blocks the terminal even if the if the Cloud Workstation is stopped and the tunnel is closed (e.g., using Google Cloud's web console).
 
+* Tunnel fails to start if Cloud Workstation is stopped:
+
+![](./cw-tunnel-demo-01.gif)
+
 #### Options
 
 If `-up` is provided, then `cw` checks the state of the Cloud Workstation; if it's stopped, `cw` starts the Cloud Workstatation, waits until it has started and then, it creates the tunnel.
+
+* Tunnel waits until the Cloud Workstation is started (using `-up`):
+
+![](./cw-tunnel-demo-02.gif)
 
 ### `cw start`
 
@@ -66,11 +74,25 @@ Start the Cloud Workstation machine if it's stopped.
 
 `cw start` blocks the terminal until the Cloud Workstation has fully started.
 
+![cw start](./cw-start-demo.gif)
+
 ### `cw stop`
 
 Stop the Cloud Workstation machine if it's running (started).
 
 `cw stop` blocks the terminal until the Cloud Workstation has fully stopped.
+
+![cw start](./cw-stop-demo.gif)
+
+### `--quiet`
+
+By default, `cw` displays information about the Cloud Workstation like the Google Project ID, region, cluster and config name  and so on...
+
+* Example **whithout** `--quiet` (default):
+
+![show config](./cw-stop-no-quiet.png)
+
+Using `--quiet`, `cw` does not display this information.
 
 ## Connect the IDE to the Cloud Workstation
 

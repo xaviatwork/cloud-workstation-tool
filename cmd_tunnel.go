@@ -7,6 +7,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -68,10 +69,13 @@ func tunnel(args []string) error {
 			if strings.Contains(line, "Listening on port") {
 				ready <- true
 			}
-			if strings.Contains(line, "ERROR") {
-				fmt.Println(line)
-				ready <- false
-			}
+			// if strings.Contains(line, "ERROR") {
+			// 	fmt.Println(line)
+			// 	ready <- false
+			// }
+		}
+		if err := scanner.Err(); err != nil {
+			fmt.Fprintln(os.Stderr, "error:", err)
 		}
 	}()
 

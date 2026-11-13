@@ -27,16 +27,28 @@ func NewCloudWorkstation() *CloudWorkstation {
 		}}
 }
 
-func Load(cfg *Config) (*CloudWorkstation, error) {
-	if cfg == nil {
-		cfg = useDefault()
-	}
-	cfgBytes, err := os.ReadFile(cfg.Path)
+// func Load(cfg *Config) (*CloudWorkstation, error) {
+// 	if cfg == nil {
+// 		cfg = useDefault()
+// 	}
+// 	cfgBytes, err := os.ReadFile(cfg.Path)
+// 	if err != nil {
+// 		return &CloudWorkstation{}, err
+// 	}
+// 	cw := NewCloudWorkstation()
+// 	if err := json.Unmarshal(cfgBytes, cw); err != nil {
+// 		return &CloudWorkstation{}, err
+// 	}
+// 	return cw, nil
+// }
+
+func LoadConfig(path string) (*CloudWorkstation, error) {
+	cfg, err := os.ReadFile(path)
 	if err != nil {
-		return &CloudWorkstation{}, err
+		return nil, err
 	}
 	cw := NewCloudWorkstation()
-	if err := json.Unmarshal(cfgBytes, cw); err != nil {
+	if err := json.Unmarshal(cfg, cw); err != nil {
 		return &CloudWorkstation{}, err
 	}
 	return cw, nil

@@ -20,7 +20,7 @@ func app() *cobra.Command {
 		Short: "cw is CLI tool to start/stop or create a tunnel to a Cloud Workstation",
 	}
 	// add global flags
-	cmd.PersistentFlags().StringP("conf", "c", "$HOME/.confg/cloud-workstation/cw.cfg", "Configuration file")
+	cmd.PersistentFlags().StringP("conf", "c", "", "Configuration file")
 	// add subcommands
 	cmd.AddCommand(tunnel(), start(), stop())
 	// TODO
@@ -50,6 +50,9 @@ func runTunnel(cmd *cobra.Command, args []string) error {
 	configFile, err := cmd.Flags().GetString("conf")
 	if err != nil {
 		return err
+	}
+	if configFile == "" {
+		configFile = cloudworkstation.DefaultConfigPath()
 	}
 	cw, err := cloudworkstation.LoadConfig(configFile)
 	if err != nil {

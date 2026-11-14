@@ -10,6 +10,14 @@ type Config struct {
 	Path string
 }
 
+func DefaultConfigPath() string {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return ""
+	}
+	return path.Join(homeDir, ".config", "cloud-workstation", "cw.cfg")
+}
+
 func useDefault() *Config {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {

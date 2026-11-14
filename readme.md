@@ -86,7 +86,7 @@ By default, `cw` displays information about the Cloud Workstation like the Googl
 
 ![cw stop](./media/cw-stop-quiet.gif)
 
-Using `--quiet`, `cw` does not display this information.
+Using `--quiet`, `cw` does not display Cloud Workstation information.
 
 ## Help
 
@@ -134,7 +134,7 @@ Global Flags:
   -q, --quiet         Don't display Cloud Workstation information
 ```
 
-## Eneable shell autocompletion
+## Enable shell autocompletion
 
 Generate the autocompletion file for your shell using and source it.
 

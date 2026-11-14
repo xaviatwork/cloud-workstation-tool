@@ -39,10 +39,10 @@ func Execute() {
 func tunnel() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "tunnel",
-		Short: "creates a tunnel to the remote Cloud Workstation",
+		Short: "starts the Cloud Workstation and creates a tunnel to it",
 		RunE:  runTunnel,
 	}
-
+	cmd.PersistentFlags().Bool("only", false, "Create only the tunnel (do not start the Cloud Workstation)")
 	return cmd
 }
 
@@ -58,10 +58,16 @@ func runTunnel(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	log.Println("using configFile", configFile)
-	log.Println("cw.Name", cw.Name)
 
-	fmt.Println("running the tunnel command")
+	onlyTunnel, err := cmd.Flags().GetBool("only")
+	if err != nil {
+		return err
+	}
+
+	if err := cw.Tunnel(onlyTunnel); err != nil {
+		return err
+	}
+
 	return nil
 }
 

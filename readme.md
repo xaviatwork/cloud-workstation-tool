@@ -15,7 +15,7 @@ Cloud Workstation Tool is a single binary; no need to install ¯\\\_(ツ)_/¯
 
 ### Create the configuration file
 
-Create a JSON configuration file `cw.cfg` in the Cloud Workstation Tool configuration folder with the following structure:
+Create a JSON configuration file (default is `cw.cfg`) in the Cloud Workstation Tool configuration folder with the following structure:
 
 ```json
 {
@@ -35,11 +35,13 @@ Create a JSON configuration file `cw.cfg` in the Cloud Workstation Tool configur
 * CLUSTER_CONFIG: Name of the Cloud Workstation configuration used by the Cloud Workstation
 * LOCAL: Local port to connect to the SSH tunnel
 
+Use the `-c` or `--conf` flags to specify the location of a configuration file other than the default.
+
 ## Run
 
 ### `cw tunnel`
 
-Creates a tunnel to enable SSH connections to the Cloud Workstation.
+Starts the Cloud Workstation and creates a tunnel to enable SSH connections to the Cloud Workstation.
 
 As there's no API endpoint to create the tunnel, the `cw` tool runs the corresponding `gcloud`(*) command.
 
@@ -56,17 +58,11 @@ The tunnel remains open until `cw` is terminated (using `Ctrl+C`).
 
 `cw` blocks the terminal even if the if the Cloud Workstation is stopped and the tunnel is closed (e.g., using Google Cloud's web console).
 
-* Tunnel fails to start if Cloud Workstation is stopped:
-
-![](./cw-tunnel-demo-01.gif)
+![cw tunnel](./media/cw-tunnel.gif)
 
 #### Options
 
-If `-up` is provided, then `cw` checks the state of the Cloud Workstation; if it's stopped, `cw` starts the Cloud Workstatation, waits until it has started and then, it creates the tunnel.
-
-* Tunnel waits until the Cloud Workstation is started (using `-up`):
-
-![](./cw-tunnel-demo-02.gif)
+If `-only` is provided, then `cw` only creates the tunnel, but it doesn't start the Cloud Workstation. This may reslt in the tunnel not being created, if the Cloud Workstation is not running.
 
 ### `cw start`
 
@@ -74,15 +70,13 @@ Start the Cloud Workstation machine if it's stopped.
 
 `cw start` blocks the terminal until the Cloud Workstation has fully started.
 
-![cw start](./cw-start-demo.gif)
-
 ### `cw stop`
 
 Stop the Cloud Workstation machine if it's running (started).
 
 `cw stop` blocks the terminal until the Cloud Workstation has fully stopped.
 
-![cw start](./cw-stop-demo.gif)
+![cw stop](./media/cw-stop.gif)
 
 ### `--quiet`
 
@@ -90,9 +84,61 @@ By default, `cw` displays information about the Cloud Workstation like the Googl
 
 * Example **whithout** `--quiet` (default):
 
-![show config](./cw-stop-no-quiet.png)
+![cw stop](./media/cw-stop-quiet.gif)
 
 Using `--quiet`, `cw` does not display this information.
+
+## Help
+
+Use `-h` or `--help` to get usage information about the application or any of the available commands:
+
+```console
+$ cw -h
+cw is a wrapper around gcloud to start/stop Cloud Workstations and to create a tunnel to them.
+v2.x relies on gcloud completely, to avoid having to set ADC for starting/stopping the Cloud Workstation.
+
+Usage:
+  cw [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  start       starts the Cloud Workstation if it's stopped
+  stop        stops the Cloud Workstation if it's running
+  tunnel      starts the Cloud Workstation and creates a tunnel to it
+
+Flags:
+  -c, --conf string   Configuration file
+  -h, --help          help for cw
+  -q, --quiet         Don't display Cloud Workstation information
+  -v, --version       version for cw
+
+Use "cw [command] --help" for more information about a command.
+```
+
+For one of the commands:
+
+```console
+$ cw tunnel --help
+starts the Cloud Workstation and creates a tunnel to it
+
+Usage:
+  cw tunnel [flags]
+
+Flags:
+  -h, --help   help for tunnel
+      --only   Create only the tunnel (do not start the Cloud Workstation)
+
+Global Flags:
+  -c, --conf string   Configuration file
+  -q, --quiet         Don't display Cloud Workstation information
+```
+
+## Eneable shell autocompletion
+
+Generate the autocompletion file for your shell using and source it.
+
+For additional information, run `cw completion --help`.
 
 ## Connect the IDE to the Cloud Workstation
 

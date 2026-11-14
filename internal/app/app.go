@@ -39,15 +39,19 @@ func tunnel() *cobra.Command {
 	return cmd
 }
 
-func runTunnel(cmd *cobra.Command, args []string) error {
+func loadConfigHelper(cmd *cobra.Command) (*cloudworkstation.CloudWorkstation, error) {
 	configFile, err := cmd.Flags().GetString("conf")
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if configFile == "" {
 		configFile = cloudworkstation.DefaultConfigPath()
 	}
-	cw, err := cloudworkstation.LoadConfig(configFile)
+	return cloudworkstation.LoadConfig(configFile)
+}
+
+func runTunnel(cmd *cobra.Command, args []string) error {
+	cw, err := loadConfigHelper(cmd)
 	if err != nil {
 		return err
 	}
@@ -75,14 +79,7 @@ func start() *cobra.Command {
 }
 
 func runStart(cmd *cobra.Command, args []string) error {
-	configFile, err := cmd.Flags().GetString("conf")
-	if err != nil {
-		return err
-	}
-	if configFile == "" {
-		configFile = cloudworkstation.DefaultConfigPath()
-	}
-	cw, err := cloudworkstation.LoadConfig(configFile)
+	cw, err := loadConfigHelper(cmd)
 	if err != nil {
 		return err
 	}
@@ -105,14 +102,7 @@ func stop() *cobra.Command {
 }
 
 func runStop(cmd *cobra.Command, args []string) error {
-	configFile, err := cmd.Flags().GetString("conf")
-	if err != nil {
-		return err
-	}
-	if configFile == "" {
-		configFile = cloudworkstation.DefaultConfigPath()
-	}
-	cw, err := cloudworkstation.LoadConfig(configFile)
+	cw, err := loadConfigHelper(cmd)
 	if err != nil {
 		return err
 	}

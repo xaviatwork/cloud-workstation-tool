@@ -3,16 +3,10 @@ package app
 import (
 	"cloudworkstation/internal/cloudworkstation"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/spf13/cobra"
 )
-
-// var rootCmd = &cobra.Command{
-// 	Use:   "cw",
-// 	Short: "cw is CLI tool to start/stop or create a tunnel to a Cloud Workstation",
-// }
 
 func app() *cobra.Command {
 	cmd := &cobra.Command{
@@ -23,7 +17,6 @@ func app() *cobra.Command {
 	cmd.PersistentFlags().StringP("conf", "c", "", "Configuration file")
 	// add subcommands
 	cmd.AddCommand(tunnel(), start(), stop())
-	// TODO
 	return cmd
 }
 

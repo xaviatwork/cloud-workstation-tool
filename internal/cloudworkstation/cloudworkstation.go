@@ -36,34 +36,28 @@ func (cw *CloudWorkstation) FullResourceName() string {
 		cw.Name)
 }
 
-func (cw *CloudWorkstation) Stop() error {
-	stopParams := []string{"workstations", "stop", cw.Name,
+func (cw *CloudWorkstation) start_stop(action string) error {
+	cwParams := []string{"workstations", action,
+		cw.Name,
 		"--project", cw.ProjectId,
 		"--region", cw.Region,
 		"--cluster", cw.Cluster,
 		"--config", cw.ClusterConfig,
 	}
-	gcloudStopCmd := exec.CommandContext(context.Background(), "gcloud", stopParams...)
+	gcloudCmd := exec.CommandContext(context.Background(), "gcloud", cwParams...)
 
-	if err := gcloudStopCmd.Run(); err != nil {
-		return fmt.Errorf("Failed to stop Cloud Workstation %s: %v", cw.Name, err)
+	if err := gcloudCmd.Run(); err != nil {
+		return fmt.Errorf("Failed to %s Cloud Workstation %s: %v", action, cw.Name, err)
 	}
 	return nil
 }
 
-func (cw *CloudWorkstation) Start() error {
-	startParams := []string{"workstations", "start", cw.Name,
-		"--project", cw.ProjectId,
-		"--region", cw.Region,
-		"--cluster", cw.Cluster,
-		"--config", cw.ClusterConfig,
-	}
-	gcloudStartCmd := exec.CommandContext(context.Background(), "gcloud", startParams...)
+func (cw *CloudWorkstation) Stop() error {
+	return cw.start_stop("stop")
+}
 
-	if err := gcloudStartCmd.Run(); err != nil {
-		return fmt.Errorf("Failed to start Cloud Workstation %s: %v", cw.Name, err)
-	}
-	return nil
+func (cw *CloudWorkstation) Start() error {
+	return cw.start_stop("start")
 }
 
 type TunnelPorts struct {

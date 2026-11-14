@@ -100,7 +100,7 @@ func runStart(cmd *cobra.Command, args []string) error {
 		cw.ShowConfig()
 	}
 
-	spin := cloudworkstation.NewSpinner(fmt.Sprintf("Workstation '%s'", cw.Name))
+	spin := cloudworkstation.NewSpinner(fmt.Sprintf("Starting Cloud Workstation '%s'", cw.Name))
 	cancel := spin.Start(context.Background())
 	defer cancel()
 
@@ -133,7 +133,7 @@ func runStop(cmd *cobra.Command, args []string) error {
 	if !quiet {
 		cw.ShowConfig()
 	}
-	spin := cloudworkstation.NewSpinner(fmt.Sprintf("Workstation '%s'", cw.Name))
+	spin := cloudworkstation.NewSpinner(fmt.Sprintf("Stopping Cloud Workstation '%s'", cw.Name))
 	cancel := spin.Start(context.Background())
 	defer cancel()
 

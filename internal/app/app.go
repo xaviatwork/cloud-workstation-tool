@@ -82,7 +82,22 @@ func start() *cobra.Command {
 }
 
 func runStart(cmd *cobra.Command, args []string) error {
-	fmt.Println("start the Cloud Workstation")
+	configFile, err := cmd.Flags().GetString("conf")
+	if err != nil {
+		return err
+	}
+	if configFile == "" {
+		configFile = cloudworkstation.DefaultConfigPath()
+	}
+	cw, err := cloudworkstation.LoadConfig(configFile)
+	if err != nil {
+		return err
+	}
+
+	if err := cw.Start(); err != nil {
+		return err
+	}
+
 	return nil
 }
 

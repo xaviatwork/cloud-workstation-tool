@@ -1,12 +1,13 @@
 package cloudworkstation
 
 import (
+	"bufio"
 	"context"
 	"fmt"
-	"time"
-
-	workstations "cloud.google.com/go/workstations/apiv1"
-	workstationspb "cloud.google.com/go/workstations/apiv1/workstationspb"
+	"log"
+	"os"
+	"os/exec"
+	"strings"
 )
 
 type CloudWorkstation struct {
@@ -35,35 +36,6 @@ func (cw *CloudWorkstation) FullResourceName() string {
 		cw.Name)
 }
 
-func (cw *CloudWorkstation) Start(c *workstations.Client) error {
-	ctx := context.Background()
-	req := &workstationspb.StartWorkstationRequest{
-		Name: cw.FullResourceName(),
-	}
-	op, err := c.StartWorkstation(ctx, req)
-	if err != nil {
-		return err
-	}
-
-	spin := NewSpinner(fmt.Sprintf("Workstation '%s'", cw.Name))
-	cancel := spin.Start(context.Background())
-	defer cancel()
-
-	for {
-		_, err := op.Poll(ctx)
-		if err != nil {
-			return err
-		}
-		if op.Done() {
-			spin.Stop("Started!")
-			break
-		}
-		spin.UpdateMessage("Starting ...")
-		time.Sleep(5 * time.Second)
-	}
-	return nil
-}
-
 func (cw *CloudWorkstation) Stop() error {
 	stopParams := []string{"workstations", "stop", cw.Name,
 		"--project", cw.ProjectId,
@@ -71,11 +43,25 @@ func (cw *CloudWorkstation) Stop() error {
 		"--cluster", cw.Cluster,
 		"--config", cw.ClusterConfig,
 	}
-	log.Println(stopParams)
 	gcloudStopCmd := exec.CommandContext(context.Background(), "gcloud", stopParams...)
 
 	if err := gcloudStopCmd.Run(); err != nil {
 		return fmt.Errorf("Failed to stop Cloud Workstation %s: %v", cw.Name, err)
+	}
+	return nil
+}
+
+func (cw *CloudWorkstation) Start() error {
+	startParams := []string{"workstations", "start", cw.Name,
+		"--project", cw.ProjectId,
+		"--region", cw.Region,
+		"--cluster", cw.Cluster,
+		"--config", cw.ClusterConfig,
+	}
+	gcloudStartCmd := exec.CommandContext(context.Background(), "gcloud", startParams...)
+
+	if err := gcloudStartCmd.Run(); err != nil {
+		return fmt.Errorf("Failed to start Cloud Workstation %s: %v", cw.Name, err)
 	}
 	return nil
 }

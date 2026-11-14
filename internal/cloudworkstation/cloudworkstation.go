@@ -32,15 +32,6 @@ func (cw CloudWorkstation) ShowConfig() {
 	fmt.Printf("%-15s: %s\n", "Cluster Config", cw.ClusterConfig)
 }
 
-func (cw *CloudWorkstation) FullResourceName() string {
-	return fmt.Sprintf("projects/%s/locations/%s/workstationClusters/%s/workstationConfigs/%s/workstations/%s",
-		cw.ProjectId,
-		cw.Region,
-		cw.Cluster,
-		cw.ClusterConfig,
-		cw.Name)
-}
-
 func (cw *CloudWorkstation) start_stop(action string) error {
 	cwParams := []string{"workstations", action,
 		cw.Name,

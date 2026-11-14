@@ -85,6 +85,9 @@ func (cw *CloudWorkstation) Tunnel(onlyTunnel bool) error {
 		log.Fatalf("Failed to start tunnel: %v", err)
 	}
 	fmt.Printf("Starting tunnel to %s:%s on localhost:%s...\n", cw.Name, cw.Remote, cw.Local)
+	spin := NewSpinner(fmt.Sprintf("Workstation '%s'", cw.Name))
+	cancel := spin.Start(context.Background())
+	defer cancel()
 
 	// Parse stderr to detect when the tunnel is actually ready
 	// gcloud outputs "Listening on port [...]" to stderr when ready
@@ -111,8 +114,10 @@ func (cw *CloudWorkstation) Tunnel(onlyTunnel bool) error {
 	// Wait for the "Listening" signal
 	// <-ready
 	if <-ready {
+		spin.Stop()
 		fmt.Println("\n✅ Tunnel is ready! You can now connect to localhost:" + cw.Local)
 	} else {
+		spin.Stop()
 		fmt.Println("\n💥 Tunnel failed")
 		os.Exit(1)
 	}

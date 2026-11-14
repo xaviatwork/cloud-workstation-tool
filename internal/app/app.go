@@ -2,6 +2,7 @@ package app
 
 import (
 	"cloudworkstation/internal/cloudworkstation"
+	"context"
 	"fmt"
 	"os"
 
@@ -15,6 +16,7 @@ func app() *cobra.Command {
 	}
 	// add global flags
 	cmd.PersistentFlags().StringP("conf", "c", "", "Configuration file")
+	cmd.PersistentFlags().BoolP("quiet", "q", false, "Don't display Cloud Workstation information")
 	// add subcommands
 	cmd.AddCommand(tunnel(), start(), stop())
 	return cmd
@@ -61,6 +63,11 @@ func runTunnel(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	quiet, _ := cmd.Flags().GetBool("quiet")
+	if !quiet {
+		cw.ShowConfig()
+	}
+
 	if err := cw.Tunnel(onlyTunnel); err != nil {
 		return err
 	}
@@ -83,11 +90,21 @@ func runStart(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
+	quiet, _ := cmd.Flags().GetBool("quiet")
+	if !quiet {
+		cw.ShowConfig()
+	}
+
+	spin := cloudworkstation.NewSpinner(fmt.Sprintf("Workstation '%s'", cw.Name))
+	cancel := spin.Start(context.Background())
+	defer cancel()
 
 	if err := cw.Start(); err != nil {
 		return err
 	}
 
+	spin.Stop()
+	fmt.Println("Cloud Workstation is running 🚀")
 	return nil
 }
 
@@ -107,9 +124,19 @@ func runStop(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	quiet, _ := cmd.Flags().GetBool("quiet")
+	if !quiet {
+		cw.ShowConfig()
+	}
+	spin := cloudworkstation.NewSpinner(fmt.Sprintf("Workstation '%s'", cw.Name))
+	cancel := spin.Start(context.Background())
+	defer cancel()
+
 	if err := cw.Stop(); err != nil {
 		return err
 	}
 
+	spin.Stop()
+	fmt.Println("Cloud Workstation is stopped ⏸️")
 	return nil
 }

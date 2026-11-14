@@ -25,6 +25,7 @@ mac:
 	GOOS=$(TARGET_OS_MAC) GOARCH=$(TARGET_ARCH_ARM64) go build -o $(BUILD_DIR)/$(APP_NAME)-$(TARGET_OS_MAC)-$(TARGET_ARCH_ARM64) $(MAIN_PACKAGE)
 	@echo "--> Built: $(BUILD_DIR)/$(APP_NAME)-$(TARGET_OS_MAC)-$(TARGET_ARCH_ARM64)"
 
+intel-mac:
 	@echo "--- Compiling $(APP_NAME) for $(TARGET_OS_MAC)/$(TARGET_ARCH_AMD64) ---"
 	@# Execute the cross-compilation command
 	GOOS=$(TARGET_MAC_OS) GOARCH=$(TARGET_ARCH_AMD64) go build -o $(BUILD_DIR)/$(APP_NAME)-$(TARGET_OS_MAC)-$(TARGET_ARCH_AMD64) $(MAIN_PACKAGE)

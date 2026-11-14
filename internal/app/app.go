@@ -9,10 +9,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var version string = "v2.0"
+
 func app() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "cw",
-		Short: "cw is CLI tool to start/stop or create a tunnel to a Cloud Workstation",
+		Use:     "cw",
+		Version: version,
+		Short:   "cw is CLI tool to start/stop or create a tunnel to a Cloud Workstation (using gcloud)",
+		Long: `cw is a wrapper around gcloud to start/stop Cloud Workstations and to create a tunnel to them.
+v2.0 relies on gcloud completely, to avoid having to set ADC for starting/stopping the Cloud Workstation.`,
 	}
 	// add global flags
 	cmd.PersistentFlags().StringP("conf", "c", "", "Configuration file")

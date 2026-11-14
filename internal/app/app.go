@@ -97,6 +97,21 @@ func stop() *cobra.Command {
 }
 
 func runStop(cmd *cobra.Command, args []string) error {
-	fmt.Println("stop the Cloud Workstation")
+	configFile, err := cmd.Flags().GetString("conf")
+	if err != nil {
+		return err
+	}
+	if configFile == "" {
+		configFile = cloudworkstation.DefaultConfigPath()
+	}
+	cw, err := cloudworkstation.LoadConfig(configFile)
+	if err != nil {
+		return err
+	}
+
+	if err := cw.Stop(); err != nil {
+		return err
+	}
+
 	return nil
 }

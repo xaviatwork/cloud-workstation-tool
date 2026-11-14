@@ -64,31 +64,18 @@ func (cw *CloudWorkstation) Start(c *workstations.Client) error {
 	return nil
 }
 
-func (cw *CloudWorkstation) Stop(c *workstations.Client) error {
-	ctx := context.Background()
-	req := &workstationspb.StopWorkstationRequest{
-		Name: cw.FullResourceName(),
+func (cw *CloudWorkstation) Stop() error {
+	stopParams := []string{"workstations", "stop", cw.Name,
+		"--project", cw.ProjectId,
+		"--region", cw.Region,
+		"--cluster", cw.Cluster,
+		"--config", cw.ClusterConfig,
 	}
-	op, err := c.StopWorkstation(ctx, req)
-	if err != nil {
-		return err
-	}
+	log.Println(stopParams)
+	gcloudStopCmd := exec.CommandContext(context.Background(), "gcloud", stopParams...)
 
-	spin := NewSpinner(fmt.Sprintf("Workstation '%s'", cw.Name))
-	cancel := spin.Start(context.Background())
-	defer cancel()
-
-	for {
-		_, err := op.Poll(ctx)
-		if err != nil {
-			return err
-		}
-		if op.Done() {
-			spin.Stop("Stopped!")
-			break
-		}
-		spin.UpdateMessage("Stopping ...")
-		time.Sleep(5 * time.Second)
+	if err := gcloudStopCmd.Run(); err != nil {
+		return fmt.Errorf("Failed to stop Cloud Workstation %s: %v", cw.Name, err)
 	}
 	return nil
 }

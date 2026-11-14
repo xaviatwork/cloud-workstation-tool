@@ -76,7 +76,7 @@ func (cw *CloudWorkstation) Tunnel(onlyTunnel bool) error {
 		log.Fatalf("Failed to start tunnel: %v", err)
 	}
 	fmt.Printf("Starting tunnel to %s:%s on localhost:%s...\n", cw.Name, cw.Remote, cw.Local)
-	spin := NewSpinner(fmt.Sprintf("Workstation '%s'", cw.Name))
+	spin := NewSpinner(fmt.Sprintf("Tunneling to Cloud Workstation '%s'", cw.Name))
 	cancel := spin.Start(context.Background())
 	defer cancel()
 

@@ -10,6 +10,11 @@ import (
 	"strings"
 )
 
+type TunnelPorts struct {
+	Local  string `json:"local"`
+	Remote string `json:"remote"`
+}
+
 type CloudWorkstation struct {
 	ProjectId     string `json:"project_id"`
 	Region        string `json:"region"`
@@ -58,11 +63,6 @@ func (cw *CloudWorkstation) Stop() error {
 
 func (cw *CloudWorkstation) Start() error {
 	return cw.start_stop("start")
-}
-
-type TunnelPorts struct {
-	Local  string `json:"local"`
-	Remote string `json:"remote"`
 }
 
 func (cw *CloudWorkstation) Tunnel(onlyTunnel bool) error {
